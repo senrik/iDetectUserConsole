@@ -6,27 +6,31 @@ using UnityEngine.Networking;
 public class UserConsoleController : MonoBehaviour {
 
     public UserPanelController userPanel;
-    public bool sendProgress = true;
+    public bool sendProgress = false;
 
+    private ProgressTracker tracker;
+    private ClientSession clientSession;
     int maxConnections = 10;
     int myReliableChannelId;
     int myUnreliableChannelId;
-    int hostId;
+    int socketId;
     int socketPort = 8888;
     int connectionId;
 
+    private void Awake()
+    {
+        tracker = GetComponent<ProgressTracker>();
+        clientSession = GetComponent<ClientSession>();
+    }
+
     // Use this for initialization
     void Start () {
-        NetworkTransport.Init();
-        ConnectionConfig config = new ConnectionConfig();
-        myReliableChannelId = config.AddChannel(QosType.Reliable);
-        myUnreliableChannelId = config.AddChannel(QosType.Unreliable);
-        HostTopology topolgy = new HostTopology(config, maxConnections);
-	}
 
-    void Connect()
+    }
+
+    void SendMessage()
     {
-        Network.Connect()
+
     }
 
     public Progress GetProgress()
@@ -45,6 +49,10 @@ public class UserConsoleController : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-		
+		if(GetComponent<ClientSession>().ClientStarted && !sendProgress)
+        {
+            sendProgress = true;
+            tracker.StartTracking();
+        }
 	}
 }

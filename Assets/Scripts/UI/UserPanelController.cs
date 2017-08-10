@@ -9,9 +9,22 @@ public class UserPanelController : MonoBehaviour {
     public Dropdown currentTest;
     public Slider progressSlider;
 
+    private bool noEdit = true;
+    private string prevUsername = "<username>";
+
+    void UpdateUsername(InputField input)
+    {
+        prevUsername = input.text;
+    }
+
+    private void Start()
+    {
+        username.onEndEdit.AddListener(delegate { UpdateUsername(username); });
+    }
+
     public string Username
     {
-        get { return username.text; }
+        get { return prevUsername; }
     }
 
     public string CurrentTest

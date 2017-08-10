@@ -14,8 +14,15 @@ public class ProgressTracker : MonoBehaviour {
     // Use this for initialization
     void Start () {
         sessionProgress = m_userConsole.GetProgress();
-        StartCoroutine(TrackProgress());
+        //StartCoroutine(TrackProgress());
 	}
+
+    public void StartTracking()
+    {
+        Debug.Log("Starting Tracking");
+        StartCoroutine(TrackProgress());
+    }
+
 	IEnumerator TrackProgress()
     {
         while (m_userConsole.sendProgress)
@@ -23,11 +30,19 @@ public class ProgressTracker : MonoBehaviour {
             sessionProgress = m_userConsole.GetProgress();
             yield return new WaitForSeconds(0.5f);
             // send sessionProgress
-            Debug.Log(JsonUtility.ToJson(sessionProgress));
+            string jsonProgress = JsonUtility.ToJson(sessionProgress);
+            Debug.Log(jsonProgress);
+            GetComponent<ClientSession>().SendProgress(jsonProgress);
+
         }
     }
 	// Update is called once per frame
 	void Update () {
 
 	}
+
+    public string JsonProgress
+    {
+        get { return JsonUtility.ToJson(sessionProgress); }
+    }
 }
